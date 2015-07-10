@@ -31,13 +31,13 @@ public class AuthenticationController {
 
   @RequestMapping(method = RequestMethod.POST)
   public ResponseEntity<?> authenticationRequest(@RequestBody AuthenticationRequest authenticationRequest, HttpServletResponse response) throws AuthenticationException {
-    Authentication authentication = this.authenticationManager.authenticate(
+    UserAuthentication authentication = (UserAuthentication) this.authenticationManager.authenticate(
       new UsernamePasswordAuthenticationToken(
         authenticationRequest.getUsername(),
         authenticationRequest.getPassword()
       )
     );
-    this.tokenAuthenticationService.addAuthentication(response, (UserAuthentication) authentication);
+    this.tokenAuthenticationService.addAuthentication(response, authentication);
     return ResponseEntity.ok(null);
   }
 
