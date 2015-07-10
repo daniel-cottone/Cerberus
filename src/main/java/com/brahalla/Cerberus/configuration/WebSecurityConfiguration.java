@@ -19,13 +19,13 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity httpSecurity) throws Exception {
     httpSecurity
-      .exceptionHandling()
+      /*.exceptionHandling()
         .and()
       .anonymous()
         .and()
       .servletApi()
         .and()
-      /*.headers()
+      .headers()
         .cacheControl()
         .and()*/
       .authorizeRequests()
