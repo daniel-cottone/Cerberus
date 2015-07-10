@@ -1,5 +1,6 @@
 package com.brahalla.Cerberus.controller.rest;
 
+import com.brahalla.Cerberus.configuration.TokenAuthenticationService;;
 import com.brahalla.Cerberus.model.json.AuthenticationRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,11 @@ public class AuthenticationController {
   @Autowired
   AuthenticationManager authenticationManager;
 
+  @Autowired
+  TokenAuthenticationService tokenAuthenticationService;
+
   @RequestMapping(method = RequestMethod.POST)
-  public ResponseEntity<?> authenticationRequest(@RequestBody AuthenticationRequest authenticationRequest ) throws AuthenticationException {
+  public ResponseEntity<?> authenticationRequest(@RequestBody AuthenticationRequest authenticationRequest) throws AuthenticationException {
     ResponseEntity<?> response = null;
     Authentication authentication = this.authenticationManager.authenticate(
       new UsernamePasswordAuthenticationToken(
