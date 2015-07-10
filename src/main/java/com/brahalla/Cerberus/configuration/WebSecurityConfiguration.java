@@ -26,31 +26,33 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
   }
 
   @Override
-  protected void configure(HttpSecurity http) throws Exception {
-    http
-    .exceptionHandling().and()
-    .anonymous().and()
-    .servletApi().and()
-    .headers().cacheControl().and()
-    .authorizeRequests()
+  protected void configure(HttpSecurity httpSecurity) throws Exception {
+    httpSecurity
+      .exceptionHandling()
+        .and()
+      .anonymous()
+        .and()
+      .servletApi()
+        .and()
+      .headers()
+        .cacheControl()
+        .and()
+      .authorizeRequests()
+        .antMatchers("/auth/**").permitAll()
+        .anyRequest().authenticated()
+        .and()
 
-    // Allow anonymous logins
-    .antMatchers("/auth/**").permitAll()
-
-    // All other request need to be authenticated
-    .anyRequest().authenticated().and()
-
-    // Custom Token based authentication based on the header previously given to the client
-    .addFilterBefore(new StatelessAuthenticationFilter(tokenAuthenticationService),
-    UsernamePasswordAuthenticationFilter.class);
+      // Custom Token based authentication based on the header previously given to the client
+      .addFilterBefore(new StatelessAuthenticationFilter(tokenAuthenticationService), UsernamePasswordAuthenticationFilter.class);
   }
 
   @Override
-  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-    auth
+  protected void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
+    authenticationManagerBuilder
       .userDetailsService(userDetailsService())
         .passwordEncoder(new BCryptPasswordEncoder())
-      .and().inMemoryAuthentication()
+        .and()
+      .inMemoryAuthentication()
         .withUser("user").password("password").roles("USER");
   }
 
