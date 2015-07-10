@@ -16,15 +16,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Order(2)
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-  private final UserService userService;
-  private final TokenAuthenticationService tokenAuthenticationService;
-
-  public WebSecurityConfiguration() {
-    super(true);
-    this.userService = new UserService();
-    this.tokenAuthenticationService = new TokenAuthenticationService("tooManySecrets", userService);
-  }
-
   @Override
   protected void configure(HttpSecurity httpSecurity) throws Exception {
     httpSecurity
@@ -49,28 +40,11 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
     authenticationManagerBuilder
-      .userDetailsService(userDetailsService())
+      /*.userDetailsService(userDetailsService())
         .passwordEncoder(new BCryptPasswordEncoder())
-        .and()
+        .and()*/
       .inMemoryAuthentication()
         .withUser("user").password("password").roles("USER");
-  }
-
-  @Bean
-  @Override
-  public AuthenticationManager authenticationManagerBean() throws Exception {
-    return super.authenticationManagerBean();
-  }
-
-  @Bean
-  @Override
-  public UserService userDetailsService() {
-    return userService;
-  }
-
-  @Bean
-  public TokenAuthenticationService tokenAuthenticationService() {
-    return tokenAuthenticationService;
   }
 
 }
