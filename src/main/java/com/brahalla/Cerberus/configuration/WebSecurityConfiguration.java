@@ -23,4 +23,10 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
   @Autowired
   private final TokenAuthenticationService tokenAuthenticationService;
 
+  public WebSecurityConfiguration() {
+    super();
+    this.userService = new UserService();
+    this.tokenAuthenticationService = new TokenAuthenticationService("tooManySecrets", this.userService);
+  }
+
 }
