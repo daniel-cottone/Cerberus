@@ -3,7 +3,6 @@ package com.brahalla.Cerberus.configuration;
 import java.util.HashMap;
 
 import org.springframework.security.authentication.AccountStatusUserDetailsChecker;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
