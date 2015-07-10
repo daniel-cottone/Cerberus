@@ -13,7 +13,6 @@ public class UserAuthentication implements Authentication {
 
   public UserAuthentication(User user) {
     this.user = user;
-    System.out.println("****************\r\n" + user);
   }
 
   @Override
