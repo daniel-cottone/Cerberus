@@ -1,6 +1,9 @@
 package com.brahalla.Cerberus.controller.rest;
 
+import com.brahalla.Cerberus.model.json.AuthenticationRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,14 +23,16 @@ public class AuthenticationController {
   AuthenticationManager authenticationManager;
 
   @RequestMapping(method = RequestMethod.POST)
-  public String authenticationRequest(@RequestBody String username) throws AuthenticationException {
+  public ResponseEntity<?> authenticationRequest(@RequestBody AuthenticationRequest authenticationRequest ) throws AuthenticationException {
+    ResponseEntity<?> response = null;
     Authentication authentication = this.authenticationManager.authenticate(
       new UsernamePasswordAuthenticationToken(
-        username,
-        username
+        authenticationRequest.getUsername(),
+        authenticationRequest.getPassword()
       )
     );
-    return "hello";
+    response = ResponseEntity.ok(null);
+    return response;
   }
 
 }
