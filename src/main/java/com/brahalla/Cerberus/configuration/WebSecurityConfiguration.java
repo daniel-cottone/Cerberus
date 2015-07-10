@@ -30,7 +30,10 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         .and()*/
       .authorizeRequests()
         .antMatchers("/auth/**").permitAll()
-        .anyRequest().authenticated();
+        .anyRequest().authenticated()
+        .and()
+      .csrf()
+        .disable();
         //.and()
 
       // Custom Token based authentication based on the header previously given to the client
