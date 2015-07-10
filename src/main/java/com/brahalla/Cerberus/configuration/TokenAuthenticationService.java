@@ -1,8 +1,10 @@
 package com.brahalla.Cerberus.configuration;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
 
 public class TokenAuthenticationService {
 
