@@ -39,8 +39,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         .and()
       .authorizeRequests()
         .antMatchers("/auth/**").permitAll()
-        .anyRequest().authenticated()
-        .and()
+        .anyRequest().authenticated();
+        //.and()
 
       // Custom Token based authentication based on the header previously given to the client
       //.addFilterBefore(new StatelessAuthenticationFilter(tokenAuthenticationService), UsernamePasswordAuthenticationFilter.class);
