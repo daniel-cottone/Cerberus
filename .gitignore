@@ -1,0 +1,18 @@
+# Java/Maven
+target/
+*.class
+*.jar
+*.war
+*.ear
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+.AppleDouble
+.LSOverride
