@@ -17,10 +17,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @Order(2)
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-  @Autowired
   private final UserService userService;
 
-  @Autowired
   private final TokenAuthenticationService tokenAuthenticationService;
 
   public WebSecurityConfiguration() {
