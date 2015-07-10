@@ -3,6 +3,7 @@ package com.brahalla.Cerberus.configuration;
 import java.util.HashMap;
 
 import org.springframework.security.authentication.AccountStatusUserDetailsChecker;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -10,7 +11,15 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 public class UserService implements UserDetailsService {
 
   private final AccountStatusUserDetailsChecker detailsChecker = new AccountStatusUserDetailsChecker();
-  private final HashMap<String, User> userMap = new HashMap<String, User>();
+  private final HashMap<String, User> userMap = new HashMap<String, User>(
+    "user",
+    new User(
+      "user",
+      "user",
+      true, true, true, true,
+      AuthorityUtils.createAuthorityList("USER")
+    )
+  );
 
   @Override
   public final User loadUserByUsername(String username) throws UsernameNotFoundException {
