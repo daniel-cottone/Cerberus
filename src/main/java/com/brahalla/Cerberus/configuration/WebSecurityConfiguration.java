@@ -3,7 +3,7 @@ package com.brahalla.Cerberus.configuration;
 import com.brahalla.Cerberus.service.TokenAuthenticationService;
 import com.brahalla.Cerberus.service.UserService;
 
-import org.springframework.context.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
