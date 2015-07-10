@@ -1,6 +1,8 @@
 package com.brahalla.Cerberus.configuration;
 
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
+
+import org.springframework.security.core.userdetails.User;
 
 public class TokenHandler {
 
