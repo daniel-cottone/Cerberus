@@ -11,15 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 public class UserService implements UserDetailsService {
 
   private final AccountStatusUserDetailsChecker detailsChecker = new AccountStatusUserDetailsChecker();
-  private final HashMap<String, User> userMap = new HashMap<String, User>(
-    "user",
-    new User(
-      "user",
-      "user",
-      true, true, true, true,
-      AuthorityUtils.createAuthorityList("USER")
-    )
-  );
+  private final HashMap<String, User> userMap = new HashMap<String, User>();
 
   @Override
   public final User loadUserByUsername(String username) throws UsernameNotFoundException {
