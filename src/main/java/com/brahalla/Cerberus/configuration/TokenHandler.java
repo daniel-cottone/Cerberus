@@ -1,6 +1,6 @@
 package com.brahalla.Cerberus.configuration;
 
-import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.Jwts;
 
 public class TokenHandler {
 
