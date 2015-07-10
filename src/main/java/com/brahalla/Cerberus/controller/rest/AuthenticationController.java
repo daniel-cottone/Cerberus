@@ -21,7 +21,7 @@ public class AuthenticationController {
   AuthenticationManager authenticationManager;
 
   @RequestMapping(method = RequestMethod.POST)
-  public ResponseEntity<?> authenticationRequest(@RequestBody AuthenticationRequest authenticationRequest, HttpServletResponse response) throws AuthenticationException {
+  public ResponseEntity<?> authenticationRequest(@RequestBody AuthenticationRequest authenticationRequest) throws AuthenticationException {
     Authentication authentication = this.authenticationManager.authenticate(
       new UsernamePasswordAuthenticationToken(
         authenticationRequest.getUsername(),
