@@ -34,9 +34,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         .and()
       .servletApi()
         .and()
-      .headers()
+      /*.headers()
         .cacheControl()
-        .and()
+        .and()*/
       .authorizeRequests()
         .antMatchers("/auth/**").permitAll()
         .anyRequest().authenticated();
