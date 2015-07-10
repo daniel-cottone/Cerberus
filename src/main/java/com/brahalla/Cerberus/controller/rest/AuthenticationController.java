@@ -1,10 +1,9 @@
 package com.brahalla.Cerberus.controller.rest;
 
-import com.brahalla.Cerberus.configuration.UserAuthentication;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,7 +21,7 @@ public class AuthenticationController {
 
   @RequestMapping(method = RequestMethod.POST)
   public String authenticationRequest(@RequestBody String username) throws AuthenticationException {
-    UserAuthentication userAuthentication = this.authenticationManager.authenticate(
+    Authentication authentication = this.authenticationManager.authenticate(
       new UsernamePasswordAuthenticationToken(
         username,
         username
