@@ -1,4 +1,4 @@
-package com.brahalla.Cerberus.configuration;
+package com.brahalla.Cerberus.security;
 
 import java.io.IOException;
 

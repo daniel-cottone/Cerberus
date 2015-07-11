@@ -1,5 +1,9 @@
 package com.brahalla.Cerberus.configuration;
 
+import com.brahalla.Cerberus.security.AuthenticationTokenFilter;
+import com.brahalla.Cerberus.security.EntryPointUnauthorizedHandler;
+import com.brahalla.Cerberus.security.TokenUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -66,7 +70,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         .antMatchers("/auth/**").permitAll()
         .anyRequest().authenticated();
 
-    // Custom Token based authentication based on the header previously given to the client
+    // Custom JWT based authentication
     httpSecurity
       .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
   }

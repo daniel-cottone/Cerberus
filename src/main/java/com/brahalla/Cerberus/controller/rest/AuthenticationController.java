@@ -1,8 +1,9 @@
 package com.brahalla.Cerberus.controller.rest;
 
-import com.brahalla.Cerberus.configuration.TokenUtils;
 import com.brahalla.Cerberus.model.json.AuthenticationRequest;
 import com.brahalla.Cerberus.model.json.AuthenticationResponse;
+
+import com.brahalla.Cerberus.security.TokenUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
