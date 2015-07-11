@@ -24,11 +24,8 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
   @Autowired
   private UserDetailsService userDetailsService;
 
+  @Autowired
   private AuthenticationManager authenticationManager;
-
-  public AuthenticationTokenFilter(AuthenticationManager authenticationManager) {
-    this.authenticationManager = authenticationManager;
-  }
 
   @Override
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -42,7 +39,7 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
       if (TokenUtils.validateToken(authToken, userDetails)) {
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpRequest));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        SecurityContextHolder.getContext().setAuthentication(this.authenticationManager.authenticate(authentication));
       }
     }
 

@@ -25,7 +25,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
   @Autowired
   private UserDetailsService userDetailsService;
 
-  @Autowired
   private AuthenticationTokenFilter authenticationTokenFilter;
 
   @Autowired
