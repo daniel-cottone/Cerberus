@@ -9,45 +9,65 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-  @Override
-  protected void configure(HttpSecurity httpSecurity) throws Exception {
-    httpSecurity
-      /*.exceptionHandling()
-        .and()
-      .anonymous()
-        .and()
-      .servletApi()
-        .and()
-      .headers()
-        .cacheControl()
-        .and()*/
-      .authorizeRequests()
-        .antMatchers("/auth/**").permitAll()
-        .anyRequest().authenticated()
-        .and()
-      .csrf()
-        .disable();
-        //.and()
+  @Autowired
+  private EntryPointUnauthorizedHandler unauthorizedHandler;
 
-      // Custom Token based authentication based on the header previously given to the client
-      //.addFilterBefore(new StatelessAuthenticationFilter(tokenAuthenticationService), UsernamePasswordAuthenticationFilter.class);
-  }
+  @Autowired
+  private UserDetailsService userDetailsService;
+
+  @Autowired
+  private AuthenticationTokenFilter authenticationTokenFilter;
 
   @Autowired
   public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
     authenticationManagerBuilder
-      /*.userDetailsService(userDetailsService())
-        .passwordEncoder(new BCryptPasswordEncoder())
-        .and()*/
+      .userDetailsService(this.userDetailsService)
+        .passwordEncoder(passwordEncoder())
+        .and()
       .inMemoryAuthentication()
         .withUser("user").password("password").roles("USER");
+  }
+
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
+
+  @Bean
+  @Override
+  public AuthenticationManager authenticationManagerBean() throws Exception {
+    return super.authenticationManagerBean();
+  }
+
+  @Override
+  protected void configure(HttpSecurity httpSecurity) throws Exception {
+    httpSecurity
+      .csrf()
+        .disable()
+      .exceptionHandling()
+        .authenticationEntryPoint(this.unauthorizedHandler)
+        .and()
+      .sessionManagement()
+        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        .and()
+      .addFilter(this.authenticationTokenFilter)
+      .authorizeRequests()
+        .antMatchers("/auth/**").permitAll()
+        .anyRequest().authenticated();
+        //.and()
+
+      // Custom Token based authentication based on the header previously given to the client
+      //.addFilterBefore(new StatelessAuthenticationFilter(tokenAuthenticationService), UsernamePasswordAuthenticationFilter.class);
   }
 
 }
