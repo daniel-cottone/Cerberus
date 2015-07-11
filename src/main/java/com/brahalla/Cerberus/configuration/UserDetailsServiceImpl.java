@@ -18,7 +18,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
     return new User(
       "user",
-      "password",
+      "$2a$10$FdLhpmkhswPRCbnw2apRcON2a9Ddax1VjZU.P1bQJW.YHI4owJyfO",
       true, true, true, true,
       AuthorityUtils.createAuthorityList("USER")
     );
