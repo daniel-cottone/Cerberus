@@ -30,7 +30,7 @@ public final class TokenUtils {
   }
 
   public static boolean validateToken(String token, UserDetails userDetails) {
-    return (getUsernameFromToken(token) == userDetails.getUsername());
+    return (getUsernameFromToken(token).equals(userDetails.getUsername()));
   }
 
 }

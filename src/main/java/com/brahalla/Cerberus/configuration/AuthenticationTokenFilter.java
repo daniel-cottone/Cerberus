@@ -32,8 +32,8 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
     System.out.println("**************\r\n\r\n" + "Username: " + username + "\r\n");
 
     if (username != null) {
-      System.out.println("**************\r\n\r\nGot here!\r\n");
       UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+      System.out.println("**************\r\n\r\n" + userDetails + "\r\n");
       if (TokenUtils.validateToken(authToken, userDetails)) {
         System.out.println("**************\r\n\r\nGot here!\r\n");
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
