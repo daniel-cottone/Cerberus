@@ -32,10 +32,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
   public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
     authenticationManagerBuilder
       .userDetailsService(this.userDetailsService)
-        .passwordEncoder(passwordEncoder())
-        .and()
-      .inMemoryAuthentication()
-        .withUser("user").password("password").roles("USER");
+        .passwordEncoder(passwordEncoder());
   }
 
   @Bean
@@ -64,7 +61,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
       .authorizeRequests()
         .antMatchers("/auth/**").permitAll()
         .anyRequest().authenticated();
-        //.and()
 
       // Custom Token based authentication based on the header previously given to the client
       //.addFilterBefore(new StatelessAuthenticationFilter(tokenAuthenticationService), UsernamePasswordAuthenticationFilter.class);
