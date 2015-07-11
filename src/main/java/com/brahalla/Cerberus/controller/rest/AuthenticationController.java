@@ -38,7 +38,7 @@ public class AuthenticationController {
     SecurityContextHolder.getContext().setAuthentication(authentication);
 
     // Reload password post-authentication so we can generate token
-    UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+    UserDetails userDetails = this.userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
     String token = TokenUtils.createTokenForUser(userDetails);
 
     return ResponseEntity.ok(token);
