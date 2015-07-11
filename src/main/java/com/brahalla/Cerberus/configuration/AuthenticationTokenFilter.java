@@ -29,9 +29,13 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
     String authToken = httpRequest.getHeader("X-Auth-Token");
     String username = TokenUtils.getUsernameFromToken(authToken);
 
+    System.out.println("**************\r\n\r\n" + "Username: " + username + "\r\n");
+
     if (username != null) {
+      System.out.println("**************\r\n\r\nGot here!\r\n");
       UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
       if (TokenUtils.validateToken(authToken, userDetails)) {
+        System.out.println("**************\r\n\r\nGot here!\r\n");
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpRequest));
         SecurityContextHolder.getContext().setAuthentication(authentication);
