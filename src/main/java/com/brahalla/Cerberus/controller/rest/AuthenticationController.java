@@ -1,5 +1,6 @@
 package com.brahalla.Cerberus.controller.rest;
 
+import com.brahalla.Cerberus.configuration.TokenUtils;
 import com.brahalla.Cerberus.model.json.AuthenticationRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,6 +24,9 @@ public class AuthenticationController {
   @Autowired
   AuthenticationManager authenticationManager;
 
+  @Autowired
+  private UserDetailsService userDetailsService;
+
   @RequestMapping(method = RequestMethod.POST)
   public ResponseEntity<?> authenticationRequest(@RequestBody AuthenticationRequest authenticationRequest) throws AuthenticationException {
     Authentication authentication = this.authenticationManager.authenticate(
@@ -28,7 +35,13 @@ public class AuthenticationController {
         authenticationRequest.getPassword()
       )
     );
-    return ResponseEntity.ok(null);
+    SecurityContextHolder.getContext().setAuthentication(authentication);
+
+    // Reload password post-authentication so we can generate token
+    UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+    String token = TokenUtils.createTokenForUser(userDetails);
+
+    return ResponseEntity.ok(token);
   }
 
 }
