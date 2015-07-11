@@ -9,6 +9,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,6 +23,12 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
 
   @Autowired
   private UserDetailsService userDetailsService;
+
+  private AuthenticationManager authenticationManager;
+
+  public AuthenticationTokenFilter(AuthenticationManager authenticationManager) {
+    this.authenticationManager = authenticationManager;
+  }
 
   @Override
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
