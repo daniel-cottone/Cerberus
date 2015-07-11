@@ -2,6 +2,7 @@ package com.brahalla.Cerberus.controller.rest;
 
 import com.brahalla.Cerberus.configuration.TokenUtils;
 import com.brahalla.Cerberus.model.json.AuthenticationRequest;
+import com.brahalla.Cerberus.model.json.AuthenticationResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,8 @@ public class AuthenticationController {
 
   @RequestMapping(method = RequestMethod.POST)
   public ResponseEntity<?> authenticationRequest(@RequestBody AuthenticationRequest authenticationRequest) throws AuthenticationException {
+
+    // Perform the authentication
     Authentication authentication = this.authenticationManager.authenticate(
       new UsernamePasswordAuthenticationToken(
         authenticationRequest.getUsername(),
@@ -39,9 +42,10 @@ public class AuthenticationController {
 
     // Reload password post-authentication so we can generate token
     UserDetails userDetails = this.userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-    String token = TokenUtils.createTokenForUser(userDetails);
+    String token = TokenUtils.generateToken(userDetails);
 
-    return ResponseEntity.ok(token);
+    // Return the token
+    return ResponseEntity.ok(new AuthenticationResponse(token));
   }
 
 }

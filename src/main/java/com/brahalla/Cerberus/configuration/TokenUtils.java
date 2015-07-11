@@ -17,7 +17,7 @@ public final class TokenUtils {
     return username;
   }
 
-  public static String createTokenForUser(UserDetails userDetails) {
+  public static String generateToken(UserDetails userDetails) {
     return Jwts.builder()
       .setSubject(userDetails.getUsername())
       .signWith(SignatureAlgorithm.HS512, secret)

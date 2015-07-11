@@ -72,9 +72,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
       @Override
       public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        System.out.println("******************\r\n" + username + "******************\r\n");
         if (!username.equals("user")) {
-          System.out.println("******************\r\n" + "THROWING EXCEPTION\r\n" + "******************\r\n");
           throw new UsernameNotFoundException("no user found with " + username);
         }
         return new User(
