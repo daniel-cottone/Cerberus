@@ -9,11 +9,16 @@ public final class TokenUtils {
   private final static String secret = "dirtySecret";
 
   public static String getUsernameFromToken(String token) {
-    String username = Jwts.parser()
-      .setSigningKey(secret)
-      .parseClaimsJws(token)
-      .getBody()
-      .getSubject();
+    String username;
+    try {
+      username = Jwts.parser()
+        .setSigningKey(secret)
+        .parseClaimsJws(token)
+        .getBody()
+        .getSubject();
+    } catch (Exception e) {
+      username = null;
+    }
     return username;
   }
 
