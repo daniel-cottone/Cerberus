@@ -26,8 +26,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
   @Autowired
   private EntryPointUnauthorizedHandler unauthorizedHandler;
 
-  private AuthenticationTokenFilter authenticationTokenFilter;
-
   @Autowired
   public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
     authenticationManagerBuilder
@@ -46,6 +44,13 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     return super.authenticationManagerBean();
   }
 
+  @Bean
+  public AuthenticationTokenFilter authenticationTokenFilterBean() throws Exception {
+    AuthenticationTokenFilter authenticationTokenFilter = new AuthenticationTokenFilter();
+    authenticationTokenFilter.setAuthenticationManager(authenticationManagerBean());
+    return authenticationTokenFilter;
+  }
+
   @Override
   protected void configure(HttpSecurity httpSecurity) throws Exception {
     httpSecurity
@@ -57,13 +62,13 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
       .sessionManagement()
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()
-      //.addFilter(this.authenticationTokenFilter)
       .authorizeRequests()
         .antMatchers("/auth/**").permitAll()
         .anyRequest().authenticated();
 
-      // Custom Token based authentication based on the header previously given to the client
-      //.addFilterBefore(new StatelessAuthenticationFilter(tokenAuthenticationService), UsernamePasswordAuthenticationFilter.class);
+    // Custom Token based authentication based on the header previously given to the client
+    httpSecurity
+      .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
   }
 
   @Bean
