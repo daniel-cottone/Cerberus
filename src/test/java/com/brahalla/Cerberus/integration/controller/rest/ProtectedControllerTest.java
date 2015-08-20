@@ -93,16 +93,24 @@ public class ProtectedControllerTest {
   public void requestingProtectedWithValidCredentialsReturnsExpected() throws Exception {
     this.initializeStateForMakingValidProtectedRequest();
 
+    ResponseEntity<String> responseEntity = client.exchange(
+      TestApiConfig.getAbsolutePath(protectedRoute),
+      HttpMethod.GET,
+      buildProtectedRequestEntity(),
+      String.class
+    );
+    String protectedResponse = responseEntity.getBody();
+
     try {
-      ResponseEntity<String> responseEntity = client.exchange(
-        TestApiConfig.getAbsolutePath(protectedRoute),
-        HttpMethod.GET,
-        buildProtectedRequestEntity(),
-        String.class
-      );
       assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
     } catch (Exception e) {
       fail("Should have returned an HTTP 400: Ok status code");
+    }
+
+    try {
+      assertThat(protectedResponse, is(":O"));
+    } catch (Exception e) {
+      fail("Should have returned expected response: :O");
     }
   }
 
