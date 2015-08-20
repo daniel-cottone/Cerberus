@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProtectedController {
 
   @RequestMapping(method = RequestMethod.GET)
-  @PreAuthorize("hasRole('USER')")
+  @PreAuthorize("hasRole('ADMIN')")
   public String getDaHoney() {
     return ":O";
   }

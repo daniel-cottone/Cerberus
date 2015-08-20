@@ -59,6 +59,20 @@ public class ProtectedControllerTest {
   }
 
   @Test
+  public void requestingProtectedWithUnauthorizedCredentialsReturnsForbidden() throws Exception {
+    this.initializeStateForMakingInvalidProtectedRequest();
+
+    try {
+      client.exchange(TestApiRoutes.PROTECTED_ROUTE, HttpMethod.GET, buildProtectedRequestEntity(), Void.class);
+      fail("Should have returned an HTTP 403: Forbidden status code");
+    } catch (HttpClientErrorException e) {
+      assertThat(e.getStatusCode(), is(HttpStatus.FORBIDDEN));
+    } catch (Exception e) {
+      fail("Should have returned an HTTP 403: Forbidden status code");
+    }
+  }
+
+  @Test
   public void requestingProtectedWithValidCredentialsReturnsExpected() throws Exception {
     this.initializeStateForMakingValidProtectedRequest();
 
@@ -76,6 +90,18 @@ public class ProtectedControllerTest {
   }
 
   private void initializeStateForMakingValidProtectedRequest() {
+    authenticationRequest = new AuthenticationRequest("admin", "admin");
+
+    ResponseEntity<AuthenticationResponse> authenticationResponse = client.postForEntity(
+      TestApiRoutes.AUTHENTICATION_ROUTE,
+      authenticationRequest,
+      AuthenticationResponse.class
+    );
+
+    authenticationToken = authenticationResponse.getBody().getToken();
+  }
+
+  private void initializeStateForMakingInvalidProtectedRequest() {
     authenticationRequest = new AuthenticationRequest("user", "password");
 
     ResponseEntity<AuthenticationResponse> authenticationResponse = client.postForEntity(
