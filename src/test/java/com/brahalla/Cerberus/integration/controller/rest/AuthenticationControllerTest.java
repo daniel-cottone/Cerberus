@@ -4,13 +4,14 @@ import com.brahalla.Cerberus.Application;
 import com.brahalla.Cerberus.model.json.AuthenticationRequest;
 import com.brahalla.Cerberus.model.json.AuthenticationResponse;
 import com.brahalla.Cerberus.security.TokenUtils;
-import com.brahalla.Cerberus.util.TestApiRoutes;
+import com.brahalla.Cerberus.util.TestApiConfig;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.http.HttpEntity;
@@ -34,6 +35,9 @@ public class AuthenticationControllerTest {
   private RestTemplate client;
   private AuthenticationRequest authenticationRequest;
 
+  @Value("${cerberus.route.authentication}")
+  private String authenticationRoute;
+
   @Before
   public void setUp() throws Exception {
     client = new RestTemplate();
@@ -50,7 +54,7 @@ public class AuthenticationControllerTest {
 
     try {
       client.exchange(
-        TestApiRoutes.AUTHENTICATION_ROUTE,
+        TestApiConfig.getAbsolutePath(authenticationRoute),
         HttpMethod.POST,
         buildAuthenticationRequestEntityWithoutCredentials(),
         Void.class
@@ -69,7 +73,7 @@ public class AuthenticationControllerTest {
 
     try {
       client.exchange(
-        TestApiRoutes.AUTHENTICATION_ROUTE,
+        TestApiConfig.getAbsolutePath(authenticationRoute),
         HttpMethod.POST,
         buildAuthenticationRequestEntity(),
         Void.class
@@ -83,11 +87,11 @@ public class AuthenticationControllerTest {
   }
 
   @Test
-  public void requestingProtectedWithValidCredentialsReturnsExpectedResult() throws Exception {
+  public void requestingProtectedWithValidCredentialsReturnsExpected() throws Exception {
     this.initializeStateForMakingValidAuthenticationRequest();
 
     ResponseEntity<AuthenticationResponse> responseEntity = client.exchange(
-      TestApiRoutes.AUTHENTICATION_ROUTE,
+      TestApiConfig.getAbsolutePath(authenticationRoute),
       HttpMethod.POST,
       buildAuthenticationRequestEntity(),
       AuthenticationResponse.class
