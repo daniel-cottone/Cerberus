@@ -3,13 +3,14 @@ package com.brahalla.Cerberus.integration.controller.rest;
 import com.brahalla.Cerberus.Application;
 import com.brahalla.Cerberus.model.json.AuthenticationRequest;
 import com.brahalla.Cerberus.model.json.AuthenticationResponse;
-import com.brahalla.Cerberus.util.TestApiRoutes;
+import com.brahalla.Cerberus.util.TestApiConfig;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.http.HttpEntity;
@@ -34,6 +35,12 @@ public class ProtectedControllerTest {
   private AuthenticationRequest authenticationRequest;
   private String authenticationToken;
 
+  @Value("${cerberus.route.authentication}")
+  private String authenticationRoute;
+
+  @Value("${cerberus.route.protected}")
+  private String protectedRoute;
+
   @Before
   public void setUp() throws Exception {
     client = new RestTemplate();
@@ -49,7 +56,12 @@ public class ProtectedControllerTest {
     this.initializeStateForMakingValidProtectedRequest();
 
     try {
-      client.exchange(TestApiRoutes.PROTECTED_ROUTE, HttpMethod.GET, buildProtectedRequestEntityWithoutAuthorizationToken(), Void.class);
+      client.exchange(
+        TestApiConfig.getAbsolutePath(protectedRoute),
+        HttpMethod.GET,
+        buildProtectedRequestEntityWithoutAuthorizationToken(),
+        Void.class
+      );
       fail("Should have returned an HTTP 401: Unauthorized status code");
     } catch (HttpClientErrorException e) {
       assertThat(e.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
@@ -63,7 +75,12 @@ public class ProtectedControllerTest {
     this.initializeStateForMakingInvalidProtectedRequest();
 
     try {
-      client.exchange(TestApiRoutes.PROTECTED_ROUTE, HttpMethod.GET, buildProtectedRequestEntity(), Void.class);
+      client.exchange(
+        TestApiConfig.getAbsolutePath(protectedRoute),
+        HttpMethod.GET,
+        buildProtectedRequestEntity(),
+        Void.class
+      );
       fail("Should have returned an HTTP 403: Forbidden status code");
     } catch (HttpClientErrorException e) {
       assertThat(e.getStatusCode(), is(HttpStatus.FORBIDDEN));
@@ -78,7 +95,7 @@ public class ProtectedControllerTest {
 
     try {
       ResponseEntity<String> responseEntity = client.exchange(
-        TestApiRoutes.PROTECTED_ROUTE,
+        TestApiConfig.getAbsolutePath(protectedRoute),
         HttpMethod.GET,
         buildProtectedRequestEntity(),
         String.class
@@ -93,7 +110,7 @@ public class ProtectedControllerTest {
     authenticationRequest = new AuthenticationRequest("admin", "admin");
 
     ResponseEntity<AuthenticationResponse> authenticationResponse = client.postForEntity(
-      TestApiRoutes.AUTHENTICATION_ROUTE,
+      TestApiConfig.getAbsolutePath(authenticationRoute),
       authenticationRequest,
       AuthenticationResponse.class
     );
@@ -105,7 +122,7 @@ public class ProtectedControllerTest {
     authenticationRequest = new AuthenticationRequest("user", "password");
 
     ResponseEntity<AuthenticationResponse> authenticationResponse = client.postForEntity(
-      TestApiRoutes.AUTHENTICATION_ROUTE,
+      TestApiConfig.getAbsolutePath(authenticationRoute),
       authenticationRequest,
       AuthenticationResponse.class
     );
