@@ -45,7 +45,7 @@ public class ProtectedControllerTest {
   }
 
   @Test
-  public void requestingProtectedWithNoAuthorizationTokenReturnsForbidden() throws Exception {
+  public void requestingProtectedWithNoAuthorizationTokenReturnsUnauthorized() throws Exception {
     this.initializeStateForMakingValidProtectedRequest();
 
     try {
@@ -59,7 +59,7 @@ public class ProtectedControllerTest {
   }
 
   @Test
-  public void requestingProtectedWithValidCredentialsReturnsExpectedResult() throws Exception {
+  public void requestingProtectedWithValidCredentialsReturnsExpected() throws Exception {
     this.initializeStateForMakingValidProtectedRequest();
 
     try {
