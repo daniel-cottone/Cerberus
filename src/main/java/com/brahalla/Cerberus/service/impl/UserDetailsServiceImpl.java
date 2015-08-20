@@ -17,15 +17,28 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    if (!username.equals("user")) {
+    if (!(username.equals("user")) && !(username.equals("admin"))) {
       throw new UsernameNotFoundException("no user found with " + username);
     }
-    return new User(
-      "user",
-      this.passwordEncoder.encode("password"),
-      true, true, true, true,
-      AuthorityUtils.createAuthorityList("USER")
-    );
+
+    User user = null;
+    if (username.equals("user")) {
+      user = new User(
+        "user",
+        this.passwordEncoder.encode("password"),
+        true, true, true, true,
+        AuthorityUtils.createAuthorityList("USER")
+      );
+    } else if (username.equals("admin")) {
+      user = new User(
+        "admin",
+        this.passwordEncoder.encode("admin"),
+        true, true, true, true,
+        AuthorityUtils.createAuthorityList("ADMIN")
+      );
+    }
+
+    return user;
   }
 
 }
