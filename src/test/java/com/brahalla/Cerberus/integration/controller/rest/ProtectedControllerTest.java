@@ -3,6 +3,7 @@ package com.brahalla.Cerberus.integration.controller.rest;
 import com.brahalla.Cerberus.Application;
 import com.brahalla.Cerberus.model.json.AuthenticationRequest;
 import com.brahalla.Cerberus.model.json.AuthenticationResponse;
+import com.brahalla.Cerberus.util.RequestEntityBuilder;
 import com.brahalla.Cerberus.util.TestApiConfig;
 
 import org.junit.After;
@@ -93,21 +94,29 @@ public class ProtectedControllerTest {
   public void requestingProtectedWithValidCredentialsReturnsExpected() throws Exception {
     this.initializeStateForMakingValidProtectedRequest();
 
+    ResponseEntity<String> responseEntity = client.exchange(
+      TestApiConfig.getAbsolutePath(protectedRoute),
+      HttpMethod.GET,
+      buildProtectedRequestEntity(),
+      String.class
+    );
+    String protectedResponse = responseEntity.getBody();
+
     try {
-      ResponseEntity<String> responseEntity = client.exchange(
-        TestApiConfig.getAbsolutePath(protectedRoute),
-        HttpMethod.GET,
-        buildProtectedRequestEntity(),
-        String.class
-      );
       assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
     } catch (Exception e) {
       fail("Should have returned an HTTP 400: Ok status code");
     }
+
+    try {
+      assertThat(protectedResponse, is(":O"));
+    } catch (Exception e) {
+      fail("Should have returned expected response: :O");
+    }
   }
 
   private void initializeStateForMakingValidProtectedRequest() {
-    authenticationRequest = new AuthenticationRequest("admin", "admin");
+    authenticationRequest = TestApiConfig.ADMIN_AUTHENTICATION_REQUEST;
 
     ResponseEntity<AuthenticationResponse> authenticationResponse = client.postForEntity(
       TestApiConfig.getAbsolutePath(authenticationRoute),
@@ -119,7 +128,7 @@ public class ProtectedControllerTest {
   }
 
   private void initializeStateForMakingInvalidProtectedRequest() {
-    authenticationRequest = new AuthenticationRequest("user", "password");
+    authenticationRequest = TestApiConfig.USER_AUTHENTICATION_REQUEST;
 
     ResponseEntity<AuthenticationResponse> authenticationResponse = client.postForEntity(
       TestApiConfig.getAbsolutePath(authenticationRoute),
@@ -130,19 +139,12 @@ public class ProtectedControllerTest {
     authenticationToken = authenticationResponse.getBody().getToken();
   }
 
-  private HttpEntity<String> buildProtectedRequestEntity() {
-    HttpHeaders headers = new HttpHeaders();
-    headers.add("X-Auth-Token", authenticationToken);
-    headers.add("Content-Type", "application/json");
-    HttpEntity<String> entity = new HttpEntity<String>(headers);
-    return entity;
+  private HttpEntity<Object> buildProtectedRequestEntity() {
+    return RequestEntityBuilder.buildRequestEntityWithoutBody(authenticationToken);
   }
 
-  private HttpEntity<String> buildProtectedRequestEntityWithoutAuthorizationToken() {
-    HttpHeaders headers = new HttpHeaders();
-    headers.add("Content-Type", "application/json");
-    HttpEntity<String> entity = new HttpEntity<String>(headers);
-    return entity;
+  private HttpEntity<Object> buildProtectedRequestEntityWithoutAuthorizationToken() {
+    return RequestEntityBuilder.buildRequestEntityWithoutBodyOrAuthenticationToken();
   }
 
 }

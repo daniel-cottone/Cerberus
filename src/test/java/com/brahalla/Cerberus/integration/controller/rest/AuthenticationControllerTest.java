@@ -4,6 +4,7 @@ import com.brahalla.Cerberus.Application;
 import com.brahalla.Cerberus.model.json.AuthenticationRequest;
 import com.brahalla.Cerberus.model.json.AuthenticationResponse;
 import com.brahalla.Cerberus.security.TokenUtils;
+import com.brahalla.Cerberus.util.RequestEntityBuilder;
 import com.brahalla.Cerberus.util.TestApiConfig;
 
 import org.junit.After;
@@ -112,28 +113,19 @@ public class AuthenticationControllerTest {
   }
 
   private void initializeStateForMakingValidAuthenticationRequest() {
-    authenticationRequest = new AuthenticationRequest("user", "password");
+    authenticationRequest = TestApiConfig.USER_AUTHENTICATION_REQUEST;
   }
 
   private void initializeStateForMakingInvalidAuthenticationRequest() {
-    authenticationRequest = new AuthenticationRequest("user", "password!!!");
+    authenticationRequest = TestApiConfig.INVALID_AUTHENTICATION_REQUEST;
   }
 
-  private HttpEntity<AuthenticationRequest> buildAuthenticationRequestEntity() {
-    HttpHeaders headers = new HttpHeaders();
-    headers.add("Content-Type", "application/json");
-    HttpEntity<AuthenticationRequest> entity = new HttpEntity<AuthenticationRequest>(
-      authenticationRequest,
-      headers
-    );
-    return entity;
+  private HttpEntity<Object> buildAuthenticationRequestEntity() {
+    return RequestEntityBuilder.buildRequestEntityWithoutAuthenticationToken(authenticationRequest);
   }
 
-  private HttpEntity<AuthenticationRequest> buildAuthenticationRequestEntityWithoutCredentials() {
-    HttpHeaders headers = new HttpHeaders();
-    headers.add("Content-Type", "application/json");
-    HttpEntity<AuthenticationRequest> entity = new HttpEntity<AuthenticationRequest>(headers);
-    return entity;
+  private HttpEntity<Object> buildAuthenticationRequestEntityWithoutCredentials() {
+    return RequestEntityBuilder.buildRequestEntityWithoutBodyOrAuthenticationToken();
   }
 
 }
