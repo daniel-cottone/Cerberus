@@ -3,6 +3,7 @@ package com.brahalla.Cerberus.integration.controller.rest;
 import com.brahalla.Cerberus.Application;
 import com.brahalla.Cerberus.model.json.AuthenticationRequest;
 import com.brahalla.Cerberus.model.json.AuthenticationResponse;
+import com.brahalla.Cerberus.util.RequestEntityBuilder;
 import com.brahalla.Cerberus.util.TestApiConfig;
 
 import org.junit.After;
@@ -115,7 +116,7 @@ public class ProtectedControllerTest {
   }
 
   private void initializeStateForMakingValidProtectedRequest() {
-    authenticationRequest = new AuthenticationRequest("admin", "admin");
+    authenticationRequest = TestApiConfig.ADMIN_AUTHENTICATION_REQUEST;
 
     ResponseEntity<AuthenticationResponse> authenticationResponse = client.postForEntity(
       TestApiConfig.getAbsolutePath(authenticationRoute),
@@ -127,7 +128,7 @@ public class ProtectedControllerTest {
   }
 
   private void initializeStateForMakingInvalidProtectedRequest() {
-    authenticationRequest = new AuthenticationRequest("user", "password");
+    authenticationRequest = TestApiConfig.USER_AUTHENTICATION_REQUEST;
 
     ResponseEntity<AuthenticationResponse> authenticationResponse = client.postForEntity(
       TestApiConfig.getAbsolutePath(authenticationRoute),
@@ -138,19 +139,12 @@ public class ProtectedControllerTest {
     authenticationToken = authenticationResponse.getBody().getToken();
   }
 
-  private HttpEntity<String> buildProtectedRequestEntity() {
-    HttpHeaders headers = new HttpHeaders();
-    headers.add("X-Auth-Token", authenticationToken);
-    headers.add("Content-Type", "application/json");
-    HttpEntity<String> entity = new HttpEntity<String>(headers);
-    return entity;
+  private HttpEntity<Object> buildProtectedRequestEntity() {
+    return RequestEntityBuilder.buildRequestEntityWithoutBody(authenticationToken);
   }
 
-  private HttpEntity<String> buildProtectedRequestEntityWithoutAuthorizationToken() {
-    HttpHeaders headers = new HttpHeaders();
-    headers.add("Content-Type", "application/json");
-    HttpEntity<String> entity = new HttpEntity<String>(headers);
-    return entity;
+  private HttpEntity<Object> buildProtectedRequestEntityWithoutAuthorizationToken() {
+    return RequestEntityBuilder.buildRequestEntityWithoutBodyOrAuthenticationToken();
   }
 
 }
