@@ -13,7 +13,7 @@ public class ProtectedController {
   @RequestMapping(method = RequestMethod.GET)
   @PreAuthorize("hasRole('ADMIN')")
   public String getDaHoney() {
-    return "Hello!";
+    return ":O";
   }
 
 }
