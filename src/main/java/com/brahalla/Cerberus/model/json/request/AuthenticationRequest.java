@@ -1,8 +1,8 @@
-package com.brahalla.Cerberus.model.json;
+package com.brahalla.Cerberus.model.json.request;
 
-import com.brahalla.Cerberus.model.base.CommonModelBase;
+import com.brahalla.Cerberus.model.base.ModelBase;
 
-public class AuthenticationRequest extends CommonModelBase {
+public class AuthenticationRequest extends ModelBase {
 
 	private static final long serialVersionUID = 6624726180748515507L;
 	private String username;

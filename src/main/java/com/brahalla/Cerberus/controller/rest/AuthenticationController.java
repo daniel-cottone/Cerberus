@@ -1,7 +1,7 @@
 package com.brahalla.Cerberus.controller.rest;
 
-import com.brahalla.Cerberus.model.json.AuthenticationRequest;
-import com.brahalla.Cerberus.model.json.AuthenticationResponse;
+import com.brahalla.Cerberus.model.json.request.AuthenticationRequest;
+import com.brahalla.Cerberus.model.json.response.AuthenticationResponse;
 
 import com.brahalla.Cerberus.security.TokenUtils;
 
