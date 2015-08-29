@@ -4,6 +4,8 @@
 This project is a demonstration of a stateless, RESTful token-based authentication system using Spring Security.
 
 ##Usage
+To use this app, run in terminal `mvn spring-boot:run`.
+
 This app has two endpoints and two user accounts:
 
 ```
