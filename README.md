@@ -1,38 +1,47 @@
 #Cerberus
 
 ##About
-This project is a demonstration of a stateless, RESTful token-based authentication system using Spring Security.
+Cerberus is a demonstration of a completely stateless and RESTful token-based authorization system using JSON Web Tokens (JWT) and Spring Security.
+
+##Why?
+For an API to be truly RESTful, no application state can be stored on the server itself. One particular challenge in implementing this is ensuring that your API is secure. Cerberus is the answer to this problem; access to the endpoints in the API requires a JSON Web Token to be present in the request header. This token is obtained by successfully performing an authentication request with the API, and afterwards this token will grant access to the API based on the authorities granted to the specified user.
+
+##Requirements
+Cerberus requires Maven and Java 1.7 or greater.
 
 ##Usage
-To use this app, run in terminal `mvn spring-boot:run`.
+To use start Cerberus, run in the terminal `mvn spring-boot:run`. Cerberus will now be running at `http://localhost:8080/api/`
 
-This app has two endpoints and two user accounts:
+There are two built-in user accounts to demonstrate the differing levels of access to the endpoints in the API:
+```
+User - user:password
+Admin - admin:admin
+```
 
+Cerberus also has two endpoints. The first is the authentication endpoint, which is unrestricted. The second is a protected endpoint which only admin users may access (provided the correct JWT token is present in the request header):
 ```
 /api/auth
 /api/protected
-
-User account - user:password
-Admin account - admin:admin
 ```
 
-Only `/api/auth` allows anonymous access, while `/api/protected` requires that you have admin access. All secure paths require a JWT token to be in the request header. Sending a POST request with the following credentials will give you a token:
-
+To authenticate with Cerberus, you can curl a POST request with the following credentials to receive a JWT token:
 ```
-Request:
-{
-  "username": "admin",
-  "password": "admin"
-}
+curl -i -H "Content-Type: application/json" -X POST -d '{"username":"admin","password":"admin"}' http://localhost:8080/api/auth
+```
 
-Response:
+The response should look like this:
+```
 {
-  "token": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiJ9.bKweskM-3QqOY8ScxhC9AcREOCG2UDY0Ylezdv1h81ALFg_v0QYBgxwfUjtf_Ns7RqAQIh_kFg1ZkeFV-szRUg"
+  "token" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiJ9.bKweskM-3QqOY8ScxhC9AcREOCG2UDY0Ylezdv1h81ALFg_v0QYBgxwfUjtf_Ns7RqAQIh_kFg1ZkeFV-szRUg"
 }
 ```
 
 You can now insert this token into your request header for GET access to `/api/protected`:
+```
+curl -i -H "Content-Type: application/json" -H "X-Auth-Token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiJ9.bKweskM-3QqOY8ScxhC9cREOCG2UDY0Ylezdv1h81ALFg_v0QYBgxwfUjtf_Ns7RqAQIh_kFg1ZkeFV-szRUg" -X GET http://localhost:8080/api/protected
+```
 
-```
-X-Auth-Token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyIn0.ZDhNdKRKU0pheH5-OKrY5nZRHT6fvPEVmmAJCEupQG1Oy_7bAuUyyZBSOhe-J6FhxnY8XWVhwn0kTPDL7hLTnQ
-```
+You should get an HTTP 200 and the response `:O`
+
+##Testing
+To run Cerberus's unit tests, run in the terminal `mvn clean package`.
