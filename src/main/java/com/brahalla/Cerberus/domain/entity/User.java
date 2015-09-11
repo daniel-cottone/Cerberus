@@ -14,20 +14,20 @@ import javax.persistence.Table;
 @Table(name = "users")
 public class User extends DomainBase {
 
-  //private static final long serialVersionUID = ;
+  private static final long serialVersionUID = 2353528370345499815L;
   private Long id;
   private String username;
   private String password;
-  private String role;
+  private String authorities;
 
   public User() {
     super();
   }
 
-  public User(String username, String password, String role) {
+  public User(String username, String password, String authorities) {
     this.setUsername(username);
     this.setPassword(password);
-    this.setRole(role);
+    this.setAuthorities(authorities);
   }
 
   @Id
@@ -60,13 +60,13 @@ public class User extends DomainBase {
     this.password = password;
   }
 
-  @Column(name = "role")
-  public String getRole() {
-    return this.role;
+  @Column(name = "authorities")
+  public String getAuthorities() {
+    return this.authorities;
   }
 
-  public void setRole(String role) {
-    this.role = role;
+  public void setAuthorities(String authorities) {
+    this.authorities = authorities;
   }
 
 }

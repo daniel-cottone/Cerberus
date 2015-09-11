@@ -13,7 +13,6 @@ public class CerberusUser implements UserDetails {
   private String username;
   private String password;
   private String email;
-  private String role;
   private Collection<? extends GrantedAuthority> authorities;
   private Boolean accountNonExpired = true;
   private Boolean accountNonLocked = true;
@@ -24,11 +23,10 @@ public class CerberusUser implements UserDetails {
     super();
   }
 
-  public CerberusUser(Long id, String username, String password, String role, Collection<? extends GrantedAuthority> authorities) {
+  public CerberusUser(Long id, String username, String password, Collection<? extends GrantedAuthority> authorities) {
     this.setId(id);
     this.setUsername(username);
     this.setPassword(password);
-    this.setRole(role);
     this.setAuthorities(authorities);
   }
 
@@ -63,14 +61,6 @@ public class CerberusUser implements UserDetails {
 
   public void setEmail(String email) {
     this.email = email;
-  }
-
-  public String getRole() {
-    return this.role;
-  }
-
-  public void setRole(String role) {
-    this.role = role;
   }
 
   @Override
