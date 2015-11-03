@@ -2,13 +2,17 @@ package com.brahalla.Cerberus.security;
 
 import io.jsonwebtoken.*;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
-public final class TokenUtils {
+@Component
+public class TokenUtils {
 
-  private final static String secret = "dirtySecret";
+  @Value("${cerberus.token.secret}")
+  private String secret;
 
-  public static String getUsernameFromToken(String token) {
+  public String getUsernameFromToken(String token) {
     String username;
     try {
       username = Jwts.parser()
@@ -22,14 +26,14 @@ public final class TokenUtils {
     return username;
   }
 
-  public static String generateToken(UserDetails userDetails) {
+  public String generateToken(UserDetails userDetails) {
     return Jwts.builder()
       .setSubject(userDetails.getUsername())
       .signWith(SignatureAlgorithm.HS512, secret)
       .compact();
   }
 
-  public static boolean validateToken(String token, UserDetails userDetails) {
+  public boolean validateToken(String token, UserDetails userDetails) {
     return (getUsernameFromToken(token).equals(userDetails.getUsername()));
   }
 
