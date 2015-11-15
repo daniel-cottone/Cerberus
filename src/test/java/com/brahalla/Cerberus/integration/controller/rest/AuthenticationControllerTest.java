@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
@@ -38,6 +39,9 @@ public class AuthenticationControllerTest {
 
   @Value("${cerberus.route.authentication}")
   private String authenticationRoute;
+
+  @Autowired
+  private TokenUtils tokenUtils;
 
   @Before
   public void setUp() throws Exception {
@@ -106,7 +110,7 @@ public class AuthenticationControllerTest {
     }
 
     try {
-      assertThat(TokenUtils.getUsernameFromToken(authenticationResponse.getToken()), is(authenticationRequest.getUsername()));
+      assertThat(this.tokenUtils.getUsernameFromToken(authenticationResponse.getToken()), is(authenticationRequest.getUsername()));
     } catch (Exception e) {
       fail("Should have returned expected username from token");
     }
