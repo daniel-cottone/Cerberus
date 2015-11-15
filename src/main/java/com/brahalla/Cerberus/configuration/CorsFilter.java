@@ -1,4 +1,4 @@
-package gov.tn.portal.fred.configuration;
+package com.brahalla.Cerberus.configuration;
 
 import java.io.IOException;
 import javax.servlet.Filter;
