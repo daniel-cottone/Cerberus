@@ -2,7 +2,6 @@ package com.brahalla.Cerberus.configuration;
 
 import com.brahalla.Cerberus.security.AuthenticationTokenFilter;
 import com.brahalla.Cerberus.security.EntryPointUnauthorizedHandler;
-import com.brahalla.Cerberus.security.TokenUtils;
 import com.brahalla.Cerberus.service.SecurityService;
 
 import org.springframework.beans.factory.annotation.Autowired;
