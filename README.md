@@ -20,6 +20,7 @@
                 (,-(,(,(,/      \,),),)
 
 ```
+[![](https://travis-ci.org/brahalla/Cerberus.svg)](https://travis-ci.org/brahalla/Cerberus) [![](https://badges.gitter.im/brahalla/Cerberus.svg)](https://gitter.im/brahalla/Cerberus?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 ##About
 Cerberus is a demonstration of a completely stateless and RESTful token-based authorization system using JSON Web Tokens (JWT) and Spring Security.
 
