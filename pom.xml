@@ -21,6 +21,7 @@
     <jackson.version>2.5.3</jackson.version>
     <apache-commons.version>3.0</apache-commons.version>
     <junit.version>4.12</junit.version>
+    <coveralls-maven-plugin.version>4.1.0</coveralls-maven-plugin.version>
   </properties>
 
   <!-- Parent information -->
@@ -91,6 +92,11 @@
       <plugin>
         <groupId>pl.project13.maven</groupId>
         <artifactId>git-commit-id-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.eluder.coveralls</groupId>
+        <artifactId>coveralls-maven-plugin</artifactId>
+        <version>${coveralls-maven-plugin.version}</version>
       </plugin>
     </plugins>
   </build>
