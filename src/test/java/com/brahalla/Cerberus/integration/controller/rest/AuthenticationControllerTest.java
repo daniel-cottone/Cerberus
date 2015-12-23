@@ -1,11 +1,11 @@
 package com.brahalla.Cerberus.integration.controller.rest;
 
 import com.brahalla.Cerberus.Application;
+import com.brahalla.Cerberus.integration.util.RequestEntityBuilder;
+import com.brahalla.Cerberus.integration.util.TestApiConfig;
 import com.brahalla.Cerberus.model.json.request.AuthenticationRequest;
 import com.brahalla.Cerberus.model.json.response.AuthenticationResponse;
 import com.brahalla.Cerberus.security.TokenUtils;
-import com.brahalla.Cerberus.util.RequestEntityBuilder;
-import com.brahalla.Cerberus.util.TestApiConfig;
 
 import org.junit.After;
 import org.junit.Before;

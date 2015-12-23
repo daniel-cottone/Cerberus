@@ -1,4 +1,4 @@
-package com.brahalla.Cerberus.util;
+package com.brahalla.Cerberus.integration.util;
 
 import com.brahalla.Cerberus.model.json.request.AuthenticationRequest;
 

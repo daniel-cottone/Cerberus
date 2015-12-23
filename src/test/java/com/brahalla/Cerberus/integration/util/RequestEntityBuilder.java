@@ -1,4 +1,4 @@
-package com.brahalla.Cerberus.util;
+package com.brahalla.Cerberus.integration.util;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
