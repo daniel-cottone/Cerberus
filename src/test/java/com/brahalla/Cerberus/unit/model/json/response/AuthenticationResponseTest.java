@@ -10,7 +10,7 @@ import static org.junit.Assert.assertThat;
 
 public class AuthenticationResponseTest {
 
-  public static final String TOKEN = "token";
+  private final String TOKEN = "token";
 
   @Test
   public void callingAuthenticationResponseConstructorWithoutParametersCreatesExpectedObject() {

@@ -10,9 +10,9 @@ import static org.junit.Assert.assertThat;
 
 public class UserTest {
 
-  public static final String USERNAME = "username";
-  public static final String PASSWORD = "password";
-  public static final String AUTHORITIES = "user,admin";
+  private final String USERNAME = "username";
+  private final String PASSWORD = "password";
+  private final String AUTHORITIES = "user,admin";
 
   @Test
   public void callingUserConstructorWithoutParametersCreatesExpectedObject() {
