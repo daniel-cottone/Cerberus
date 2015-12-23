@@ -1,0 +1,32 @@
+package com.brahalla.Cerberus.unit.model.json.request;
+
+import com.brahalla.Cerberus.model.json.request.AuthenticationRequest;
+
+import org.junit.Test;
+
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+
+public class AuthenticationRequestTest {
+
+  public static final String USERNAME = "username";
+  public static final String PASSWORD = "password";
+
+  @Test
+  public void callingAuthenticationRequestConstructorWithoutParametersCreatesExpectedObject() {
+    AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+
+    assertNull(authenticationRequest.getUsername());
+    assertNull(authenticationRequest.getPassword());
+  }
+
+  @Test
+  public void callingAuthenticationRequestConstructorWithParametersCreatesExpectedObject() {
+    AuthenticationRequest authenticationRequest = new AuthenticationRequest(USERNAME, PASSWORD);
+
+    assertThat(authenticationRequest.getUsername(), is(USERNAME));
+    assertThat(authenticationRequest.getPassword(), is(PASSWORD));
+  }
+
+}
