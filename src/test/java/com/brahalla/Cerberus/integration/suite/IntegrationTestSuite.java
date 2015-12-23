@@ -1,4 +1,4 @@
-package com.brahalla.Cerberus.suite;
+package com.brahalla.Cerberus.integration.suite;
 
 import com.brahalla.Cerberus.integration.controller.rest.AuthenticationControllerTest;
 import com.brahalla.Cerberus.integration.controller.rest.ProtectedControllerTest;

@@ -1,6 +1,6 @@
 package com.brahalla.Cerberus.integration.config;
 
-import com.brahalla.Cerberus.util.TestApiConfig;
+import com.brahalla.Cerberus.integration.util.TestApiConfig;
 
 import java.util.concurrent.TimeUnit;
 
