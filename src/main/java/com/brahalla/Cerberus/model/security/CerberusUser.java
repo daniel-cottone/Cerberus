@@ -106,7 +106,7 @@ public class CerberusUser implements UserDetails {
   }
 
   public void setCredentialsNonExpired(Boolean credentialsNonExpired) {
-    this.credentialsNonExpired = this.credentialsNonExpired;
+    this.credentialsNonExpired = credentialsNonExpired;
   }
 
   @Override
