@@ -29,4 +29,15 @@ public class AuthenticationRequestTest {
     assertThat(authenticationRequest.getPassword(), is(PASSWORD));
   }
 
+  @Test
+  public void callingAuthenticationRequestGettersAndSettersReturnsExpectedObjects() {
+    AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+
+    authenticationRequest.setUsername(USERNAME);
+    authenticationRequest.setPassword(PASSWORD);
+
+    assertThat(authenticationRequest.getUsername(), is(USERNAME));
+    assertThat(authenticationRequest.getPassword(), is(PASSWORD));
+  }
+
 }

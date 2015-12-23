@@ -32,4 +32,17 @@ public class UserTest {
     assertThat(user.getAuthorities(), is(AUTHORITIES));
   }
 
+  @Test
+  public void callingUserGettersAndSettersReturnsExpectedObjects() {
+    User user = new User();
+
+    user.setUsername(USERNAME);
+    user.setPassword(PASSWORD);
+    user.setAuthorities(AUTHORITIES);
+
+    assertThat(user.getUsername(), is(USERNAME));
+    assertThat(user.getPassword(), is(PASSWORD));
+    assertThat(user.getAuthorities(), is(AUTHORITIES));
+  }
+
 }

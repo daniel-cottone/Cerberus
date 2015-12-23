@@ -26,4 +26,12 @@ public class AuthenticationResponseTest {
     assertThat(authenticationResponse.getToken(), is(TOKEN));
   }
 
+  @Test
+  public void callingAuthenticationResponseGettersAndSettersReturnsExpectedObjects() {
+    AuthenticationResponse authenticationResponse = new AuthenticationResponse();
+
+    authenticationResponse.setToken(TOKEN);
+    assertThat(authenticationResponse.getToken(), is(TOKEN));
+  }
+
 }
