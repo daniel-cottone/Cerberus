@@ -21,6 +21,7 @@
     <jackson.version>2.5.3</jackson.version>
     <apache-commons.version>3.0</apache-commons.version>
     <junit.version>4.12</junit.version>
+    <jacoco-maven-plugin.version>0.7.5.201505241946</jacoco-maven-plugin.version>
     <coveralls-maven-plugin.version>4.1.0</coveralls-maven-plugin.version>
   </properties>
 
@@ -92,6 +93,19 @@
       <plugin>
         <groupId>pl.project13.maven</groupId>
         <artifactId>git-commit-id-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>${jacoco-maven-plugin.version}</version>
+        <executions>
+          <execution>
+            <id>prepare-agent</id>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.eluder.coveralls</groupId>
