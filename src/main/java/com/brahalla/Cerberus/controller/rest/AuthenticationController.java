@@ -59,7 +59,7 @@ public class AuthenticationController {
 
   @RequestMapping(value = "${cerberus.route.authentication.refresh}", method = RequestMethod.GET)
   public ResponseEntity<?> authenticationRequest(HttpServletRequest request) {
-    String token = request.getHeader(tokenHeader);
+    String token = request.getHeader(this.tokenHeader);
     String refreshedToken = this.tokenUtils.refreshToken(token);
     return ResponseEntity.ok(new AuthenticationResponse(refreshedToken));
   }

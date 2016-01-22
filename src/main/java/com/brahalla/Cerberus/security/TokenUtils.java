@@ -15,59 +15,67 @@ public class TokenUtils {
   private String secret;
 
   @Value("${cerberus.token.expiration}")
-  private long expiration;
+  private Long expiration;
 
   public String getUsernameFromToken(String token) {
     String username;
     try {
-      username = Jwts.parser()
-        .setSigningKey(secret)
-        .parseClaimsJws(token)
-        .getBody()
-        .getSubject();
+      final Claims claims = this.getClaimsFromToken(token);
+      username = claims.getSubject();
     } catch (Exception e) {
       username = null;
     }
     return username;
   }
 
-  private Date getExpirationDate(String token) {
+  public Date getExpirationDateFromToken(String token) {
     Date expiration;
     try {
-      expiration = Jwts.parser()
-        .setSigningKey(secret)
-        .parseClaimsJws(token)
-        .getBody()
-        .getExpiration();
+      final Claims claims = this.getClaimsFromToken(token);
+      expiration = claims.getExpiration();
     } catch (Exception e) {
       expiration = null;
     }
     return expiration;
   }
 
+  private Claims getClaimsFromToken(String token) {
+    Claims claims;
+    try {
+      claims = Jwts.parser()
+        .setSigningKey(this.secret)
+        .parseClaimsJws(token)
+        .getBody();
+    } catch (Exception e) {
+      claims = null;
+    }
+    return claims;
+  }
+
+  private Date generateExpirationDate() {
+    return new Date(System.currentTimeMillis() + this.expiration * 1000);
+  }
+
   public String generateToken(UserDetails userDetails) {
     return Jwts.builder()
       .setSubject(userDetails.getUsername())
-      .setExpiration(new Date(System.currentTimeMillis() + expiration * 1000))
-      .signWith(SignatureAlgorithm.HS512, secret)
+      .setExpiration(this.generateExpirationDate())
+      .signWith(SignatureAlgorithm.HS512, this.secret)
       .compact();
   }
 
   public String generateToken(String subject) {
     return Jwts.builder()
       .setSubject(subject)
-      .setExpiration(new Date(System.currentTimeMillis() + expiration * 1000))
-      .signWith(SignatureAlgorithm.HS512, secret)
+      .setExpiration(this.generateExpirationDate())
+      .signWith(SignatureAlgorithm.HS512, this.secret)
       .compact();
   }
 
   public String refreshToken(String token) {
     String refreshedToken;
     try {
-      Claims claims = Jwts.parser()
-        .setSigningKey(secret)
-        .parseClaimsJws(token)
-        .getBody();
+      final Claims claims = this.getClaimsFromToken(token);
       refreshedToken = this.generateToken(claims.getSubject());
     } catch (Exception e) {
       refreshedToken = null;
@@ -77,7 +85,7 @@ public class TokenUtils {
 
   public boolean validateToken(String token, UserDetails userDetails) {
     final String username = this.getUsernameFromToken(token);
-    final Date expiration = this.getExpirationDate(token);
+    final Date expiration = this.getExpirationDateFromToken(token);
     return (username.equals(userDetails.getUsername()) && expiration.after(new Date(System.currentTimeMillis())));
   }
 
