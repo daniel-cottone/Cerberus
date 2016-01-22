@@ -13,6 +13,7 @@ public class TokenUtils {
 
   @Value("${cerberus.token.secret}")
   private String secret;
+
   @Value("${cerberus.token.expiration}")
   private long expiration;
 
@@ -52,11 +53,32 @@ public class TokenUtils {
       .compact();
   }
 
+  public String generateToken(String subject) {
+    return Jwts.builder()
+      .setSubject(subject)
+      .setExpiration(new Date(System.currentTimeMillis() + expiration * 1000))
+      .signWith(SignatureAlgorithm.HS512, secret)
+      .compact();
+  }
+
+  public String refreshToken(String token) {
+    String refreshedToken;
+    try {
+      Claims claims = Jwts.parser()
+        .setSigningKey(secret)
+        .parseClaimsJws(token)
+        .getBody();
+      refreshedToken = this.generateToken(claims.getSubject());
+    } catch (Exception e) {
+      refreshedToken = null;
+    }
+    return refreshedToken;
+  }
+
   public boolean validateToken(String token, UserDetails userDetails) {
-    final String username = getUsernameFromToken(token);
-    final Date expiration = getExpirationDate(token);
-    return username.equals(userDetails.getUsername()) &&
-            expiration.after(new Date(System.currentTimeMillis()));
+    final String username = this.getUsernameFromToken(token);
+    final Date expiration = this.getExpirationDate(token);
+    return (username.equals(userDetails.getUsername()) && expiration.after(new Date(System.currentTimeMillis())));
   }
 
 }
