@@ -76,9 +76,9 @@ public class TokenUtils {
     return new Date(System.currentTimeMillis() + this.expiration * 1000);
   }
 
-  public Boolean isTokenExpired(String token) {
+  private Boolean isTokenExpired(String token) {
     final Date expiration = this.getExpirationDateFromToken(token);
-    return (expiration.before(new Date(System.currentTimeMillis())) && !(this.ignoreTokenExpiration(token)));
+    return expiration.before(new Date(System.currentTimeMillis()));
   }
 
   private String generateAudience(Device device) {
@@ -111,6 +111,10 @@ public class TokenUtils {
       .setExpiration(this.generateExpirationDate())
       .signWith(SignatureAlgorithm.HS512, this.secret)
       .compact();
+  }
+
+  public Boolean canTokenBeRefreshed(String token) {
+    return (!(this.isTokenExpired(token)) || this.ignoreTokenExpiration(token));
   }
 
   public String refreshToken(String token) {

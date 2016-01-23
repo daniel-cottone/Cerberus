@@ -65,11 +65,11 @@ public class AuthenticationController {
   @RequestMapping(value = "${cerberus.route.authentication.refresh}", method = RequestMethod.GET)
   public ResponseEntity<?> authenticationRequest(HttpServletRequest request) {
     String token = request.getHeader(this.tokenHeader);
-    if (this.tokenUtils.isTokenExpired(token)) {
-      return ResponseEntity.badRequest().body("Token Expired");
-    } else {
+    if (this.tokenUtils.canTokenBeRefreshed(token)) {
       String refreshedToken = this.tokenUtils.refreshToken(token);
       return ResponseEntity.ok(new AuthenticationResponse(refreshedToken));
+    } else {
+      return ResponseEntity.badRequest().body("Token Expired");
     }
   }
 
