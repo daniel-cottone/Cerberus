@@ -3,6 +3,7 @@ package com.brahalla.Cerberus.unit.model.security;
 import com.brahalla.Cerberus.model.security.CerberusUser;
 
 import java.util.Collection;
+import java.util.Date;
 
 import org.junit.Test;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,6 +21,7 @@ public class CerberusUserTest {
   private final String USERNAME = "username";
   private final String PASSWORD = "password";
   private final String EMAIL = "user@domain.tld";
+  private final Date LAST_PASSWORD_RESET = new Date();
   private final Collection<? extends GrantedAuthority> AUTHORITIES = AuthorityUtils.commaSeparatedStringToAuthorityList("user,admin");
   private final Boolean ACCOUNT_NON_EXPIRED = false;
   private final Boolean ACCOUNT_NON_LOCKED = false;
@@ -34,6 +36,7 @@ public class CerberusUserTest {
     assertNull(cerberusUser.getUsername());
     assertNull(cerberusUser.getPassword());
     assertNull(cerberusUser.getEmail());
+    assertNull(cerberusUser.getLastPasswordReset());
     assertNull(cerberusUser.getAuthorities());
     assertTrue(cerberusUser.getAccountNonExpired());
     assertTrue(cerberusUser.getAccountNonLocked());
@@ -43,12 +46,13 @@ public class CerberusUserTest {
 
   @Test
   public void callingCerberusUserConstructorWithParametersCreatesExpectedObject() {
-    CerberusUser cerberusUser = new CerberusUser(ID, USERNAME, PASSWORD, AUTHORITIES);
+    CerberusUser cerberusUser = new CerberusUser(ID, USERNAME, PASSWORD, EMAIL, LAST_PASSWORD_RESET, AUTHORITIES);
 
     assertThat(cerberusUser.getId(), is(ID));
     assertThat(cerberusUser.getUsername(), is(USERNAME));
     assertThat(cerberusUser.getPassword(), is(PASSWORD));
-    assertNull(cerberusUser.getEmail());
+    assertThat(cerberusUser.getEmail(), is(EMAIL));
+    assertThat(cerberusUser.getLastPasswordReset(), is(LAST_PASSWORD_RESET));
     assertEquals(cerberusUser.getAuthorities(), AUTHORITIES);
     assertTrue(cerberusUser.getAccountNonExpired());
     assertTrue(cerberusUser.getAccountNonLocked());
@@ -64,6 +68,7 @@ public class CerberusUserTest {
     cerberusUser.setUsername(USERNAME);
     cerberusUser.setPassword(PASSWORD);
     cerberusUser.setEmail(EMAIL);
+    cerberusUser.setLastPasswordReset(LAST_PASSWORD_RESET);
     cerberusUser.setAuthorities(AUTHORITIES);
     cerberusUser.setAccountNonExpired(ACCOUNT_NON_EXPIRED);
     cerberusUser.setAccountNonLocked(ACCOUNT_NON_LOCKED);
@@ -74,6 +79,7 @@ public class CerberusUserTest {
     assertThat(cerberusUser.getUsername(), is(USERNAME));
     assertThat(cerberusUser.getPassword(), is(PASSWORD));
     assertThat(cerberusUser.getEmail(), is(EMAIL));
+    assertThat(cerberusUser.getLastPasswordReset(), is(LAST_PASSWORD_RESET));
     assertEquals(cerberusUser.getAuthorities(), AUTHORITIES);
     assertThat(cerberusUser.getAccountNonExpired(), is(ACCOUNT_NON_EXPIRED));
     assertThat(cerberusUser.getAccountNonLocked(), is(ACCOUNT_NON_LOCKED));
