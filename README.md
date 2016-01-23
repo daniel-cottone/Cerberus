@@ -64,5 +64,7 @@ curl -i -H "Content-Type: application/json" -H "X-Auth-Token: eyJhbGciOiJIUzUxMi
 
 You should get an HTTP 200 and the response `:O`
 
+Tokens are configured to expire after a week. To ensure that a token remains fresh and does not expire, you can refresh an existing token by sending a GET to `/api/auth/refresh` with the token set in the request header. The response will be a new token with an updated expiration date. This refresh mechanism only works for tokens that have not expired yet, unless the token was provided to a mobile device. Tokens for mobile devices can always be refreshed.
+
 ##Testing
 To run Cerberus's unit tests, run in the terminal `mvn clean package`.
