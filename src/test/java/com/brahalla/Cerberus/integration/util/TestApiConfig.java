@@ -10,6 +10,7 @@ public class TestApiConfig {
 
   public static final AuthenticationRequest USER_AUTHENTICATION_REQUEST = new AuthenticationRequest("user", "password");
   public static final AuthenticationRequest ADMIN_AUTHENTICATION_REQUEST = new AuthenticationRequest("admin", "admin");
+  public static final AuthenticationRequest EXPIRED_AUTHENTICATION_REQUEST = new AuthenticationRequest("expired", "expired");
   public static final AuthenticationRequest INVALID_AUTHENTICATION_REQUEST = new AuthenticationRequest("user", "abc123");
 
   public static String getAbsolutePath(String relativePath) {

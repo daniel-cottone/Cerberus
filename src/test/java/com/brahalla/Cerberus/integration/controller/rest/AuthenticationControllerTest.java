@@ -35,9 +35,13 @@ public class AuthenticationControllerTest {
 
   private RestTemplate client;
   private AuthenticationRequest authenticationRequest;
+  private String authenticationToken;
 
   @Value("${cerberus.route.authentication}")
   private String authenticationRoute;
+
+  @Value("${cerberus.route.authentication.refresh}")
+  private String refreshRoute;
 
   @Autowired
   private TokenUtils tokenUtils;
@@ -115,6 +119,63 @@ public class AuthenticationControllerTest {
     }
   }
 
+  @Test
+  public void requestingAuthenticationRefreshWithNoAuthorizationTokenReturnsUnauthorized() throws Exception {
+    this.initializeStateForMakingValidAuthenticationRefreshRequest();
+
+    try {
+      client.exchange(
+        TestApiConfig.getAbsolutePath(String.format("%s/%s", authenticationRoute, refreshRoute)),
+        HttpMethod.GET,
+        buildAuthenticationRefreshRequestEntityWithoutAuthorizationToken(),
+        Void.class
+      );
+      fail("Should have returned an HTTP 401: Unauthorized status code");
+    } catch (HttpClientErrorException e) {
+      assertThat(e.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
+    } catch (Exception e) {
+      fail("Should have returned an HTTP 401: Unauthorized status code");
+    }
+  }
+
+  /*@Test
+  public void requestingAuthenticationRefreshWithUnauthorizedCredentialsReturnsBadRequest() throws Exception {
+    this.initializeStateForMakingInvalidAuthenticationRefreshRequest();
+
+    try {
+      client.exchange(
+        TestApiConfig.getAbsolutePath(String.format("%s/%s", authenticationRoute, refreshRoute)),
+        HttpMethod.GET,
+        buildAuthenticationRefreshRequestEntity(),
+        Void.class
+      );
+      fail("Should have returned an HTTP 400: Bad Request status code");
+    } catch (HttpClientErrorException e) {
+      assertThat(e.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+    } catch (Exception e) {
+      fail("Should have returned an HTTP 400: Bad Request status code");
+    }
+  }*/
+
+  @Test
+  public void requestingAuthenticationRefreshTokenWithTokenCreatedBeforeLastPasswordResetReturnsBadRequest() throws Exception {
+    this.initializeStateForMakingExpiredAuthenticationRefreshRequest();
+
+    try {
+      client.exchange(
+        TestApiConfig.getAbsolutePath(String.format("%s/%s", authenticationRoute, refreshRoute)),
+        HttpMethod.GET,
+        buildAuthenticationRefreshRequestEntity(),
+        Void.class
+      );
+      fail("Should have returned an HTTP 400: Bad Request status code");
+    } catch (HttpClientErrorException e) {
+      assertThat(e.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+    } catch (Exception e) {
+      fail("Should have returned an HTTP 400: Bad Request status code");
+    }
+  }
+
   private void initializeStateForMakingValidAuthenticationRequest() {
     authenticationRequest = TestApiConfig.USER_AUTHENTICATION_REQUEST;
   }
@@ -123,11 +184,55 @@ public class AuthenticationControllerTest {
     authenticationRequest = TestApiConfig.INVALID_AUTHENTICATION_REQUEST;
   }
 
+  private void initializeStateForMakingValidAuthenticationRefreshRequest() {
+    authenticationRequest = TestApiConfig.USER_AUTHENTICATION_REQUEST;
+
+    ResponseEntity<AuthenticationResponse> authenticationResponse = client.postForEntity(
+      TestApiConfig.getAbsolutePath(authenticationRoute),
+      authenticationRequest,
+      AuthenticationResponse.class
+    );
+
+    authenticationToken = authenticationResponse.getBody().getToken();
+  }
+
+  private void initializeStateForMakingInvalidAuthenticationRefreshRequest() {
+    authenticationRequest = TestApiConfig.INVALID_AUTHENTICATION_REQUEST;
+
+    ResponseEntity<AuthenticationResponse> authenticationResponse = client.postForEntity(
+      TestApiConfig.getAbsolutePath(authenticationRoute),
+      authenticationRequest,
+      AuthenticationResponse.class
+    );
+
+    authenticationToken = authenticationResponse.getBody().getToken();
+  }
+
+  private void initializeStateForMakingExpiredAuthenticationRefreshRequest() {
+    authenticationRequest = TestApiConfig.EXPIRED_AUTHENTICATION_REQUEST;
+
+    ResponseEntity<AuthenticationResponse> authenticationResponse = client.postForEntity(
+      TestApiConfig.getAbsolutePath(authenticationRoute),
+      authenticationRequest,
+      AuthenticationResponse.class
+    );
+
+    authenticationToken = authenticationResponse.getBody().getToken();
+  }
+
   private HttpEntity<Object> buildAuthenticationRequestEntity() {
     return RequestEntityBuilder.buildRequestEntityWithoutAuthenticationToken(authenticationRequest);
   }
 
   private HttpEntity<Object> buildAuthenticationRequestEntityWithoutCredentials() {
+    return RequestEntityBuilder.buildRequestEntityWithoutBodyOrAuthenticationToken();
+  }
+
+  private HttpEntity<Object> buildAuthenticationRefreshRequestEntity() {
+    return RequestEntityBuilder.buildRequestEntityWithoutBody(authenticationToken);
+  }
+
+  private HttpEntity<Object> buildAuthenticationRefreshRequestEntityWithoutAuthorizationToken() {
     return RequestEntityBuilder.buildRequestEntityWithoutBodyOrAuthenticationToken();
   }
 
