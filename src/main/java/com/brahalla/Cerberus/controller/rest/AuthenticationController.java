@@ -2,6 +2,7 @@ package com.brahalla.Cerberus.controller.rest;
 
 import com.brahalla.Cerberus.model.json.request.AuthenticationRequest;
 import com.brahalla.Cerberus.model.json.response.AuthenticationResponse;
+import com.brahalla.Cerberus.model.security.CerberusUser;
 import com.brahalla.Cerberus.security.TokenUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -64,11 +65,13 @@ public class AuthenticationController {
   @RequestMapping(value = "${cerberus.route.authentication.refresh}", method = RequestMethod.GET)
   public ResponseEntity<?> authenticationRequest(HttpServletRequest request) {
     String token = request.getHeader(this.tokenHeader);
-    if (this.tokenUtils.canTokenBeRefreshed(token)) {
+    String username = this.tokenUtils.getUsernameFromToken(token);
+    CerberusUser user = (CerberusUser) this.userDetailsService.loadUserByUsername(username);
+    if (this.tokenUtils.canTokenBeRefreshed(token, user.getLastPasswordReset())) {
       String refreshedToken = this.tokenUtils.refreshToken(token);
       return ResponseEntity.ok(new AuthenticationResponse(refreshedToken));
     } else {
-      return ResponseEntity.badRequest().body("Token Expired");
+      return ResponseEntity.badRequest().body(null);
     }
   }
 

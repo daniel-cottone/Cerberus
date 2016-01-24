@@ -12,6 +12,8 @@ public class CerberusUserFactory {
       user.getId(),
       user.getUsername(),
       user.getPassword(),
+      user.getEmail(),
+      user.getLastPasswordReset(),
       AuthorityUtils.commaSeparatedStringToAuthorityList(user.getAuthorities())
     );
   }

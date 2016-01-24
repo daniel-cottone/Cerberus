@@ -1,10 +1,14 @@
 package com.brahalla.Cerberus.security;
 
+import com.brahalla.Cerberus.model.security.CerberusUser;
+
 import io.jsonwebtoken.*;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.apache.log4j.Logger;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mobile.device.Device;
@@ -13,6 +17,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class TokenUtils {
+
+  private final Logger logger = Logger.getLogger(this.getClass());
 
   private final String AUDIENCE_UNKNOWN   = "unknown";
   private final String AUDIENCE_WEB       = "web";
@@ -34,6 +40,17 @@ public class TokenUtils {
       username = null;
     }
     return username;
+  }
+
+  public Date getCreatedDateFromToken(String token) {
+    Date created;
+    try {
+      final Claims claims = this.getClaimsFromToken(token);
+      created = new Date((Long) claims.get("created"));
+    } catch (Exception e) {
+      created = null;
+    }
+    return created;
   }
 
   public Date getExpirationDateFromToken(String token) {
@@ -71,13 +88,21 @@ public class TokenUtils {
     return claims;
   }
 
+  private Date generateCurrentDate() {
+    return new Date(System.currentTimeMillis());
+  }
+
   private Date generateExpirationDate() {
     return new Date(System.currentTimeMillis() + this.expiration * 1000);
   }
 
   private Boolean isTokenExpired(String token) {
     final Date expiration = this.getExpirationDateFromToken(token);
-    return expiration.before(new Date(System.currentTimeMillis()));
+    return expiration.before(this.generateCurrentDate());
+  }
+
+  private Boolean isCreatedBeforeLastPasswordReset(Date created, Date lastPasswordReset) {
+    return (lastPasswordReset != null && created.before(lastPasswordReset));
   }
 
   private String generateAudience(Device device) {
@@ -101,6 +126,7 @@ public class TokenUtils {
     Map<String, Object> claims = new HashMap<String, Object>();
     claims.put("sub", userDetails.getUsername());
     claims.put("audience", this.generateAudience(device));
+    claims.put("created", this.generateCurrentDate());
     return this.generateToken(claims);
   }
 
@@ -112,14 +138,16 @@ public class TokenUtils {
       .compact();
   }
 
-  public Boolean canTokenBeRefreshed(String token) {
-    return (!(this.isTokenExpired(token)) || this.ignoreTokenExpiration(token));
+  public Boolean canTokenBeRefreshed(String token, Date lastPasswordReset) {
+    final Date created = this.getCreatedDateFromToken(token);
+    return (!(this.isCreatedBeforeLastPasswordReset(created, lastPasswordReset)) && (!(this.isTokenExpired(token)) || this.ignoreTokenExpiration(token)));
   }
 
   public String refreshToken(String token) {
     String refreshedToken;
     try {
       final Claims claims = this.getClaimsFromToken(token);
+      claims.put("created", this.generateCurrentDate());
       refreshedToken = this.generateToken(claims);
     } catch (Exception e) {
       refreshedToken = null;
@@ -128,9 +156,11 @@ public class TokenUtils {
   }
 
   public Boolean validateToken(String token, UserDetails userDetails) {
+    CerberusUser user = (CerberusUser) userDetails;
     final String username = this.getUsernameFromToken(token);
+    final Date created = this.getCreatedDateFromToken(token);
     final Date expiration = this.getExpirationDateFromToken(token);
-    return (username.equals(userDetails.getUsername()) && !(this.isTokenExpired(token)));
+    return (username.equals(user.getUsername()) && !(this.isTokenExpired(token)) && !(this.isCreatedBeforeLastPasswordReset(created, user.getLastPasswordReset())));
   }
 
 }

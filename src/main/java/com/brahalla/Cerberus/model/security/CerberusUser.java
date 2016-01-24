@@ -3,6 +3,7 @@ package com.brahalla.Cerberus.model.security;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.Collection;
+import java.util.Date;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,6 +14,7 @@ public class CerberusUser implements UserDetails {
   private String username;
   private String password;
   private String email;
+  private Date lastPasswordReset;
   private Collection<? extends GrantedAuthority> authorities;
   private Boolean accountNonExpired = true;
   private Boolean accountNonLocked = true;
@@ -23,10 +25,12 @@ public class CerberusUser implements UserDetails {
     super();
   }
 
-  public CerberusUser(Long id, String username, String password, Collection<? extends GrantedAuthority> authorities) {
+  public CerberusUser(Long id, String username, String password, String email, Date lastPasswordReset, Collection<? extends GrantedAuthority> authorities) {
     this.setId(id);
     this.setUsername(username);
     this.setPassword(password);
+    this.setEmail(email);
+    this.setLastPasswordReset(lastPasswordReset);
     this.setAuthorities(authorities);
   }
 
@@ -61,6 +65,15 @@ public class CerberusUser implements UserDetails {
 
   public void setEmail(String email) {
     this.email = email;
+  }
+
+  @JsonIgnore
+  public Date getLastPasswordReset() {
+    return this.lastPasswordReset;
+  }
+
+  public void setLastPasswordReset(Date lastPasswordReset) {
+    this.lastPasswordReset = lastPasswordReset;
   }
 
   @Override
