@@ -2,9 +2,6 @@ package com.brahalla.Cerberus.configuration;
 
 import com.brahalla.Cerberus.security.AuthenticationTokenFilter;
 import com.brahalla.Cerberus.security.EntryPointUnauthorizedHandler;
-import com.brahalla.Cerberus.security.TokenUtils;
-import com.brahalla.Cerberus.service.SecurityService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,56 +23,56 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-  @Autowired
-  private EntryPointUnauthorizedHandler unauthorizedHandler;
+    @Autowired
+    private EntryPointUnauthorizedHandler unauthorizedHandler;
 
-  @Autowired
-  private UserDetailsService userDetailsService;
+    @Autowired
+    private UserDetailsService userDetailsService;
 
-  @Autowired
-  public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-    authenticationManagerBuilder
-      .userDetailsService(this.userDetailsService)
-        .passwordEncoder(passwordEncoder());
-  }
+    @Autowired
+    public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
+        authenticationManagerBuilder
+                .userDetailsService(this.userDetailsService)
+                .passwordEncoder(passwordEncoder());
+    }
 
-  @Bean
-  public PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
-  }
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-  @Bean
-  @Override
-  public AuthenticationManager authenticationManagerBean() throws Exception {
-    return super.authenticationManagerBean();
-  }
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
 
-  @Bean
-  public AuthenticationTokenFilter authenticationTokenFilterBean() throws Exception {
-    AuthenticationTokenFilter authenticationTokenFilter = new AuthenticationTokenFilter();
-    authenticationTokenFilter.setAuthenticationManager(authenticationManagerBean());
-    return authenticationTokenFilter;
-  }
-  
-  @Override
-  protected void configure(HttpSecurity httpSecurity) throws Exception {
-    httpSecurity
-      .csrf()
-        .disable()
-      .exceptionHandling()
-        .authenticationEntryPoint(this.unauthorizedHandler)
-        .and()
-      .sessionManagement()
-        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and()
-      .authorizeRequests()
-        .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-        .antMatchers("/auth/**").permitAll()
-        .anyRequest().authenticated();
+    @Bean
+    public AuthenticationTokenFilter authenticationTokenFilterBean() throws Exception {
+        AuthenticationTokenFilter authenticationTokenFilter = new AuthenticationTokenFilter();
+        authenticationTokenFilter.setAuthenticationManager(authenticationManagerBean());
+        return authenticationTokenFilter;
+    }
 
-    // Custom JWT based authentication
-    httpSecurity
-      .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
-  }
+    @Override
+    protected void configure(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity
+                .csrf()
+                .disable()
+                .exceptionHandling()
+                .authenticationEntryPoint(this.unauthorizedHandler)
+                .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authorizeRequests()
+                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .antMatchers("/auth/**").permitAll()
+                .anyRequest().authenticated();
+
+        // Custom JWT based authentication
+        httpSecurity
+                .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
+    }
 
 }
