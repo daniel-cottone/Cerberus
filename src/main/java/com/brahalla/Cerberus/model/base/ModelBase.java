@@ -6,9 +6,9 @@ import java.io.Serializable;
 
 public class ModelBase implements Serializable {
 
-  @Override
-  public String toString() {
-    return ReflectionToStringBuilder.toString(this);
-  }
+    @Override
+    public String toString() {
+        return ReflectionToStringBuilder.toString(this);
+    }
 
 }
