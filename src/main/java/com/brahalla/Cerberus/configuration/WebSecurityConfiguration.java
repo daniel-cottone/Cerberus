@@ -33,9 +33,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
   private UserDetailsService userDetailsService;
 
   @Autowired
-  private SecurityService securityService;
-
-  @Autowired
   public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
     authenticationManagerBuilder
       .userDetailsService(this.userDetailsService)
@@ -59,12 +56,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     authenticationTokenFilter.setAuthenticationManager(authenticationManagerBean());
     return authenticationTokenFilter;
   }
-
-  @Bean
-  public SecurityService securityService() {
-    return this.securityService;
-  }
-
+  
   @Override
   protected void configure(HttpSecurity httpSecurity) throws Exception {
     httpSecurity
