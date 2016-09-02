@@ -12,6 +12,7 @@ import static org.junit.Assert.assertThat;
 
 public class UserTest {
 
+  private final Long ID = 1L;
   private final String USERNAME = "username";
   private final String PASSWORD = "password";
   private final String EMAIL = "user@domain.tld";
@@ -22,6 +23,7 @@ public class UserTest {
   public void callingUserConstructorWithoutParametersCreatesExpectedObject() {
     User user = new User();
 
+    assertNull(user.getId());
     assertNull(user.getUsername());
     assertNull(user.getPassword());
     assertNull(user.getEmail());
@@ -33,6 +35,7 @@ public class UserTest {
   public void callingUserConstructorWithParametersCreatesExpectedObject() {
     User user = new User(USERNAME, PASSWORD, EMAIL, LAST_PASSWORD_RESET, AUTHORITIES);
 
+    assertNull(user.getId());
     assertThat(user.getUsername(), is(USERNAME));
     assertThat(user.getPassword(), is(PASSWORD));
     assertThat(user.getEmail(), is(EMAIL));
@@ -44,12 +47,14 @@ public class UserTest {
   public void callingUserGettersAndSettersReturnsExpectedObjects() {
     User user = new User();
 
+    user.setId(ID);
     user.setUsername(USERNAME);
     user.setPassword(PASSWORD);
     user.setEmail(EMAIL);
     user.setLastPasswordReset(LAST_PASSWORD_RESET);
     user.setAuthorities(AUTHORITIES);
 
+    assertThat(user.getId(), is(ID));
     assertThat(user.getUsername(), is(USERNAME));
     assertThat(user.getPassword(), is(PASSWORD));
     assertThat(user.getEmail(), is(EMAIL));
