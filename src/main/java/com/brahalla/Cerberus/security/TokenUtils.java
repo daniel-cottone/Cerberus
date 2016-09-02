@@ -80,7 +80,7 @@ public class TokenUtils {
     Claims claims;
     try {
       claims = Jwts.parser()
-        .setSigningKey(this.secret)
+        .setSigningKey(this.secret.getBytes("UTF-8"))
         .parseClaimsJws(token)
         .getBody();
     } catch (Exception e) {
