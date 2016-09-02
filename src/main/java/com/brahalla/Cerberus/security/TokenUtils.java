@@ -3,6 +3,7 @@ package com.brahalla.Cerberus.security;
 import com.brahalla.Cerberus.model.security.CerberusUser;
 
 import io.jsonwebtoken.*;
+import java.io.UnsupportedEncodingException;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -79,7 +80,7 @@ public class TokenUtils {
     Claims claims;
     try {
       claims = Jwts.parser()
-        .setSigningKey(this.secret)
+        .setSigningKey(this.secret.getBytes("UTF-8"))
         .parseClaimsJws(token)
         .getBody();
     } catch (Exception e) {
@@ -131,11 +132,21 @@ public class TokenUtils {
   }
 
   private String generateToken(Map<String, Object> claims) {
-    return Jwts.builder()
-      .setClaims(claims)
-      .setExpiration(this.generateExpirationDate())
-      .signWith(SignatureAlgorithm.HS512, this.secret)
-      .compact();
+      try {
+          return Jwts.builder()
+                  .setClaims(claims)
+                  .setExpiration(this.generateExpirationDate())
+                  .signWith(SignatureAlgorithm.HS512, this.secret.getBytes("UTF-8"))
+                  .compact();
+      } catch (UnsupportedEncodingException ex) {
+          //didn't want to have this method throw the exception, would rather log it and sign the token like it was before
+          logger.warn(ex.getMessage());
+          return Jwts.builder()
+                  .setClaims(claims)
+                  .setExpiration(this.generateExpirationDate())
+                  .signWith(SignatureAlgorithm.HS512, this.secret)
+                  .compact();
+      }
   }
 
   public Boolean canTokenBeRefreshed(String token, Date lastPasswordReset) {
