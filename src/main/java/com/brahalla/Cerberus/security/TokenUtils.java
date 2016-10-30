@@ -159,7 +159,6 @@ public class TokenUtils {
     CerberusUser user = (CerberusUser) userDetails;
     final String username = this.getUsernameFromToken(token);
     final Date created = this.getCreatedDateFromToken(token);
-    final Date expiration = this.getExpirationDateFromToken(token);
     return (username.equals(user.getUsername()) && !(this.isTokenExpired(token)) && !(this.isCreatedBeforeLastPasswordReset(created, user.getLastPasswordReset())));
   }
 
